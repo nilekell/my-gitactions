@@ -7,7 +7,7 @@ jobs:
     name: Lint code base
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: RKVST login
         run: |
           echo "CLIENT_ID ${{ secrets.RKVST_CLIENT_ID }}"
           CLIENT_ID=${{ secrets.RKVST_CLIENT_ID }}
@@ -17,6 +17,7 @@ jobs:
               --data-urlencode "grant_type=client_credentials"  \
               --data-urlencode "client_id=${CLIENT_ID}" \
               --data-urlencode "client_secret=${SECRET}")
+          echo $RESPONSE
           TOKEN=$(echo -n $RESPONSE | jq -r .access_token)
           echo $TOKEN
       - name: Checkout code
