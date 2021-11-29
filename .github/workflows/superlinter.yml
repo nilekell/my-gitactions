@@ -10,7 +10,15 @@ jobs:
       - name: Checkout code
         run: |
           echo "CLIENT_ID ${{ secrets.RKVST_CLIENT_ID }}"
-
+          CLIENT_ID=${{ secrets.RKVST_CLIENT_ID }}
+          SECRET=${{ secrets.RKVST_SECRET }}
+          # use curl to obtain a temporary access token for api access using our client id and secret
+          RESPONSE=$(curl https://app.rkvst.io/archivist/iam/v1/appidp/token \
+              --data-urlencode "grant_type=client_credentials"  \
+              --data-urlencode "client_id=${CLIENT_ID}" \
+              --data-urlencode "client_secret=${SECRET}")
+          TOKEN=$(echo -n $RESPONSE | jq -r .access_token)
+          echo $TOKEN
       - name: Checkout code
         uses: actions/checkout@v2
 
